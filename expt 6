@@ -1,0 +1,67 @@
+import time
+import datetime
+import heapq
+
+def gun(neighbours, cost_update_factor, visited, heuristic_cost):
+    updated_neighbours = []
+    for weight, neighbor in neighbours:
+        if neighbor not in visited:
+            new_weight = weight + cost_update_factor + heuristic_cost(neighbor)
+            updated_neighbours.append((new_weight, neighbor))
+    return updated_neighbours
+
+def a_star_search(graph, heuristic_cost, start, goal):
+    step = 1
+    start_time = time.time()
+    visited = set()
+    priority_queue = [(cost + heuristic_cost(vertex), vertex) for cost, vertex in graph[start]]
+    heapq.heapify(priority_queue)
+    path = [start]
+    print("step:", step)
+    step += 1
+    print(f"visited {start}; Priority Queue : {priority_queue}")
+    
+    while priority_queue:
+        current_weight, vertex = heapq.heappop(priority_queue)
+        if vertex not in visited:
+            path.append(vertex)
+            visited.add(vertex)
+            priority_queue.extend(gun(graph.get(vertex, []), current_weight - heuristic_cost(vertex), visited, heuristic_cost))
+            print("step:", step)
+            step += 1
+            heapq.heapify(priority_queue)
+            print(f"visited {vertex}; Priority Queue : {priority_queue}")
+            if vertex == goal:
+                break
+    
+    print('\nTraversal Path : ', "-->".join(path))
+    end_time = time.time()
+    print("Time taken by A* traversal:", str(datetime.timedelta(seconds=end_time - start_time)), "seconds")
+
+graph1 = {
+    'A': [(6, 'B'), (3, 'F')],
+    'B': [(2, 'D'), (3, 'C')],
+    'C': [(1, 'D'), (5, 'E')],
+    'D': [(8, 'E')],
+    'E': [(5, 'J')],
+    'I': [(5, 'E'), (3, 'J')],
+    'F': [(1, 'G'), (7, 'H')],
+    'G': [(3, 'I')],
+    'H': [(2, 'I')]
+}
+
+heuristic_costs = {
+    'A': 10,
+    'B': 8,
+    'C': 5,
+    'D': 7,
+    'E': 3,
+    'F': 6,
+    'G': 5,
+    'H': 3,
+    'I': 1,
+    'J': 0
+}
+
+print('\n*** Graph ***')
+a_star_search(graph1, heuristic_costs.get, 'A', 'J')
