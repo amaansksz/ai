@@ -1,0 +1,63 @@
+import time
+import datetime
+import heapq
+
+def best_first_search(graph, start, goal):
+    start_time = time.time()
+    visited = set()
+    priority_queue = [*graph[start]]
+    heapq.heapify(priority_queue)
+    path = [start]
+    print(f"visited {start}; Priority Queue : {priority_queue}")
+    
+    while priority_queue:
+        # pop the smallest weight edge
+        weight, vertex = heapq.heappop(priority_queue)
+        if vertex not in visited:
+            path.append(vertex)
+            visited.add(vertex)
+            # add the neighbors
+            priority_queue.extend([(neighbor_weight, neighbor) for neighbor_weight, neighbor in graph.get(vertex, []) if neighbor not in visited])
+            # heapify to convert to priority queue
+            heapq.heapify(priority_queue)
+            print(f"visited {vertex}; Priority Queue : {priority_queue}")
+
+        if vertex == goal:
+            break
+    
+    print('Traversal Path : ', "-->".join(path))
+    end_time = time.time()
+    print("Time taken for Best First traversal:", str(datetime.timedelta(seconds=end_time - start_time)), "seconds")
+
+graph1 ={
+    'A': [(2, 'B'), (3, 'C')],
+    'B': [(2, 'D')],
+    'C': [(3, 'E')],
+    'D': [(6, 'E'), (2, 'G')],
+    'G': [(1, 'F'), (3, 'I')]
+}
+
+graph2 ={
+    'S': [(1, 'A'), (4, 'B')],
+    'B': [(5, 'G')],
+    'A': [(3, 'C'), (2, 'D')],
+    'D': [(4, 'F'), (3, 'G')],
+    'C': [(5, 'E')],
+    'E': [(5, 'G')],
+}
+
+graph3 ={
+    'S': [(3, 'A'), (6, 'B'), (5, 'C')],
+    'B': [(14, 'G'), (12, 'F')],
+    'A': [(9, 'D'), (8, 'E')],
+    'C': [(7, 'H')],
+    'H': [(5, 'I'), (6, 'J')],
+    'I': [(1, 'K'), (10, 'L'), (2, 'M')],
+}
+
+print('\nGraph 1:')
+best_first_search(graph1, 'A', 'G')
+print('\nGraph 2:')
+best_first_search(graph2, 'S', 'G')
+print('\nGraph 3:')
+best_first_search(graph3, 'S', 'I')
