@@ -1,0 +1,56 @@
+import time
+
+def dfs_iterative(graph, start):
+    visited = set()
+    stack = [start]
+    final_path = []
+    n = 1
+    start_time = time.time()
+
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            print('iteration', n)
+            n += 1
+            print("Visited:", visited)
+            print("Stack:", stack)
+            visited.add(node)
+            final_path.append(node)
+
+            for neighbor in reversed(graph[node]):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+    end_time = time.time()
+    print("Final Path:", final_path)
+    print("Execution Time:", end_time - start_time, "seconds\n\n\n")
+
+graph1 = {
+    'A': ['C', 'E'],
+    'C': ['B', 'G'],
+    'E': ['H'],
+    'B': [],
+    'G': [],
+    'H': ['D'],
+    'D': []
+}
+
+graph2 = {
+    'A': ['B', 'C', 'D'],
+    'B': ['E'],
+    'C': ['F', 'G'],
+    'D': ['H'],
+    'E': ['I'],
+    'F': ['J'],
+    'G': ['K'],
+    'H': [],
+    'I': [],
+    'J': [],
+    'K': []
+}
+
+print("Depth-First Search (Iterative with Stack Only):")
+print("graph1")
+dfs_iterative(graph1, 'A')
+print("graph2")
+dfs_iterative(graph2, 'A')
