@@ -1,0 +1,57 @@
+from collections import deque
+import time
+
+def bfs_iterative(graph, start):
+    visited = set()
+    queue = deque([start])
+    final_path = []
+    n = 1
+    start_time = time.time()
+
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            print('iteration', n)
+            n += 1
+            print("Visited:", visited)
+            print("Queue:", queue)
+            visited.add(node)
+            final_path.append(node)
+
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+
+    end_time = time.time()
+    print("Final Path:", final_path)
+    print("Execution Time:", end_time - start_time, "seconds\n\n\n")
+
+graph1 = {
+    'A': ['C', 'E'],
+    'C': ['B', 'G'],
+    'E': ['H'],
+    'B': [],
+    'G': [],
+    'H': ['D'],
+    'D': []
+}
+
+graph2 = {
+    'A': ['B', 'C', 'D'],
+    'B': ['E'],
+    'C': ['F', 'G'],
+    'D': ['H'],
+    'E': ['I'],
+    'F': ['J'],
+    'G': ['K'],
+    'H': [],
+    'I': [],
+    'J': [],
+    'K': []
+}
+
+print("Breadth-First Search (Iterative with Queue Only):")
+print("graph1")
+bfs_iterative(graph1, 'A')
+print("graph2")
+bfs_iterative(graph2, 'A')
